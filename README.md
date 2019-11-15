@@ -1,3 +1,7 @@
+pytest -n 2 -s -k test_login --alluredir=allure-results
+
+docker-compose up allure => http://0.0.0.0:4040
+
 # Задание 1
 Необходимо обеспечить проверку корректности значений A и B в зависимости от значения C:
 1. Если C=0, то допустимые значения для A и B:
