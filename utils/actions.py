@@ -1,4 +1,5 @@
 import time
+
 from selenium.common.exceptions import StaleElementReferenceException, TimeoutException
 from selenium.webdriver.support.select import Select
 from selenium.webdriver.support.wait import WebDriverWait

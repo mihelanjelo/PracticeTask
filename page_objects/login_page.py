@@ -1,4 +1,8 @@
+import allure
+from allure_commons.types import AttachmentType
 from selenium.webdriver.common.by import By
+
+from utils.driver_manager import Driver
 from .base_page import BasePage
 
 

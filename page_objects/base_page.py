@@ -1,6 +1,9 @@
 import time
 from typing import List
+
+import allure
 from allure_commons._allure import step
+from allure_commons.types import AttachmentType
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
@@ -26,6 +29,9 @@ class BasePage:
         "example pattern": "//div[text()='{text}']"
     }
 
+    def __call__(self, *args, **kwargs):
+        allure.attach('Скриншот', Driver.get_instance().get_screenshot_as_png(), type=AttachmentType.PNG)
+
     def is_page_opened(self, waiting_time=10):
         step_name = f'Открыта страница {self.PAGE_TITLE}'
         self.logger.info(step_name)
@@ -37,7 +43,7 @@ class BasePage:
                     return False
                 else:
                     time.sleep(1)
-
+    
     def is_visible(self, locator_name, time_waiting_element=10, values=None) -> bool:
         step_name = f'Появится {locator_name}'
         self.logger.info(step_name)
@@ -47,7 +53,7 @@ class BasePage:
             else:
                 locator = (By.XPATH, self.XPATH_PATTERNS[locator_name].format(**values))
                 return self.basic_actions.is_element_visible(locator, time_waiting_element)
-
+    
     def is_not_visible(self, locator_name: object, time_waiting_element: object = 0, values: object = None) -> bool:
         step_name = f'Исчезнет {locator_name}'
         self.logger.info(step_name)
@@ -59,7 +65,7 @@ class BasePage:
                 return self.basic_actions.wait_element_hiding(locator, time_waiting_element)
 
     def click_at(self, locator_name, time_waiting_element=10, values=None, offset=None):
-        step_name = f'Нажать на  {locator_name}'
+        step_name = f'Нажать на {locator_name}'
         self.logger.info(step_name)
         with step(step_name):
             if not offset:
@@ -116,7 +122,7 @@ class BasePage:
 
     def clear(self, locator_name, time_waiting_element=10):
         self.basic_actions.wait_element(self.LOCATORS[locator_name], time_waiting_element).clear()
-
+    
     def select_item(self, locator_name, value, time_waiting_element=10):
         self.basic_actions.select_item_by_text(value, self.LOCATORS[locator_name], time_waiting_element)
 
@@ -126,7 +132,7 @@ class BasePage:
         else:
             locator = (By.XPATH, self.XPATH_PATTERNS[locator_name].format(**values))
             return self.basic_actions.wait_elements(locator, time_waiting_element)
-
+    
     def get_element(self, locator_name, time_waiting_element=10, values=None) -> WebElement:
         if not values:
             return self.basic_actions.wait_element(self.LOCATORS[locator_name], time_waiting_element)
