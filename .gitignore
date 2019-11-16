@@ -3,5 +3,8 @@ venv
 .pytest_cache
 *.log
 venv
+__pycache__
+tests/__pycache__
+page_objects/__pycache__
 allure-results
 *.pyc
