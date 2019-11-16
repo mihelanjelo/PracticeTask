@@ -5,14 +5,14 @@ from page_objects.login_page import LoginPage
 from utils.driver_manager import Driver
 
 
-@feature('Тестирования авторизации')
+@feature('Тестирование авторизации')
 class TestLogin:
 
     @classmethod
     def teardown_class(cls):
         Driver.get_instance().quit()
 
-    @story('Проверка невозможности входа  для незарегистрированного пользователя')
+    @story('Проверка невозможности входа для незарегистрированного пользователя')
     @pytest.mark.parametrize('browser', ['chrome', 'firefox'])
     def test_try_login(self, browser):
         driver = Driver().new_instance(browser)
