@@ -1,6 +1,6 @@
 python 3.7
 
-pytest -n 2 -s -k test_login --alluredir=allure-results
+pytest -n 6 --alluredir=allure-results
 
 docker-compose up allure => http://0.0.0.0:4040
 

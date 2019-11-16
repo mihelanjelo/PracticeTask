@@ -29,8 +29,9 @@ class BasePage:
         "example pattern": "//div[text()='{text}']"
     }
 
-    def __call__(self, *args, **kwargs):
-        allure.attach('Скриншот', Driver.get_instance().get_screenshot_as_png(), type=AttachmentType.PNG)
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        if exc_val:
+            allure.attach('Скриншот', Driver.get_instance().get_screenshot_as_png(), type=AttachmentType.PNG)
 
     def is_page_opened(self, waiting_time=10):
         step_name = f'Открыта страница {self.PAGE_TITLE}'

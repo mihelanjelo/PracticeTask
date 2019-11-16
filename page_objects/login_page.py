@@ -1,8 +1,4 @@
-import allure
-from allure_commons.types import AttachmentType
 from selenium.webdriver.common.by import By
-
-from utils.driver_manager import Driver
 from .base_page import BasePage
 
 
@@ -18,4 +14,6 @@ class LoginPage(BasePage):
         "поле ввода пароля": (By.ID, "UserLogin_password"),
         'кнопка "Вход"': (By.XPATH, "//input[@type='submit']"),
         'сообщение о неверном емейле или пароле': (By.XPATH, "//*[text()='Password or email is incorrect.']"),
+        'сообщение о необходимости ввести пароль': (By.XPATH, "//*[text()='Необходимо заполнить поле «Пароль».']"),
+        'сообщение о необходимости ввести email': (By.XPATH, "//*[text()='Необходимо заполнить поле «Username or Email»."),
     }

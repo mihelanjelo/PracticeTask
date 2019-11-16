@@ -11,7 +11,7 @@ class TestLogin:
         Driver.get_instance().quit()
 
     @pytest.mark.parametrize('browser', ['chrome', 'firefox'])
-    def test_login_success(self, browser):
+    def test_try_login(self, browser):
         driver = Driver().new_instance(browser)
         driver.get('https://www.kickico.com/ru/signin')
         page = LoginPage()
@@ -22,3 +22,27 @@ class TestLogin:
         page.send_text_to("поле ввода пароля", 'test')
         page.click_at('кнопка "Вход"')
         page.is_visible('сообщение о неверном емейле или пароле')
+
+    @pytest.mark.parametrize('browser', ['chrome', 'firefox'])
+    def test_try_login_empty_password(self, browser):
+        driver = Driver().new_instance(browser)
+        driver.get('https://www.kickico.com/ru/signin')
+        page = LoginPage()
+        page.is_page_opened()
+        page.is_visible("поле ввода емейла")
+        page.is_visible("поле ввода пароля")
+        page.send_text_to("поле ввода емейла", 'test@gmail.com')
+        page.click_at('кнопка "Вход"')
+        page.is_visible('сообщение о необходимости ввести пароль')
+
+    @pytest.mark.parametrize('browser', ['chrome', 'firefox'])
+    def test_try_login_empty_email(self, browser):
+        driver = Driver().new_instance(browser)
+        driver.get('https://www.kickico.com/ru/signin')
+        page = LoginPage()
+        page.is_page_opened()
+        page.is_visible("поле ввода емейла")
+        page.is_visible("поле ввода пароля")
+        page.send_text_to("поле ввода пароля", 'test')
+        page.click_at('кнопка "Вход"')
+        page.is_visible('сообщение о необходимости ввести email')
