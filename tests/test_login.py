@@ -1,15 +1,18 @@
 import pytest
+from allure_commons._allure import story, feature
 
 from page_objects.login_page import LoginPage
 from utils.driver_manager import Driver
 
 
+@feature('Тестирования авторизации')
 class TestLogin:
 
     @classmethod
     def teardown_class(cls):
         Driver.get_instance().quit()
 
+    @story('Проверка невозможности входа  для незарегистрированного пользователя')
     @pytest.mark.parametrize('browser', ['chrome', 'firefox'])
     def test_try_login(self, browser):
         driver = Driver().new_instance(browser)
@@ -23,6 +26,7 @@ class TestLogin:
         page.click_at('кнопка "Вход"')
         page.is_visible('сообщение о неверном емейле или пароле')
 
+    @story('Проверка невозможности входа при пустом поле ввода пароля')
     @pytest.mark.parametrize('browser', ['chrome', 'firefox'])
     def test_try_login_empty_password(self, browser):
         driver = Driver().new_instance(browser)
@@ -35,6 +39,7 @@ class TestLogin:
         page.click_at('кнопка "Вход"')
         page.is_visible('сообщение о необходимости ввести пароль')
 
+    @story('Проверка невозможности входа при пустом поле ввода email')
     @pytest.mark.parametrize('browser', ['chrome', 'firefox'])
     def test_try_login_empty_email(self, browser):
         driver = Driver().new_instance(browser)
