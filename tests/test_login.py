@@ -13,7 +13,7 @@ class TestLogin:
         Driver.get_instance().quit()
 
     @story('Проверка невозможности входа для незарегистрированного пользователя')
-    @pytest.mark.parametrize('browser', ['chrome'])
+    @pytest.mark.parametrize('browser', ['chrome', 'firefox'])
     def test_try_login1(self, browser):
         driver = Driver().new_instance(browser)
         driver.get('https://www.kickico.com/ru/signin')
