@@ -1,9 +1,9 @@
 import sys
 import time
+import allure
+
 from contextlib import contextmanager
 from typing import List
-
-import allure
 from allure_commons._allure import step as allure_step
 from allure_commons.types import AttachmentType
 from selenium import webdriver

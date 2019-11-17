@@ -1,6 +1,6 @@
 import pytest
-from allure_commons._allure import story, feature
 
+from allure_commons._allure import story, feature
 from page_objects.login_page import LoginPage
 from utils.driver_manager import Driver
 
