@@ -1,8 +1,10 @@
+import sys
 import time
+from contextlib import contextmanager
 from typing import List
 
 import allure
-from allure_commons._allure import step
+from allure_commons._allure import step as allure_step
 from allure_commons.types import AttachmentType
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -29,41 +31,37 @@ class BasePage:
         "example pattern": "//div[text()='{text}']"
     }
 
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        if exc_val:
-            allure.attach('Скриншот', Driver.get_instance().get_screenshot_as_png(), type=AttachmentType.PNG)
-
     def is_page_opened(self, waiting_time=10):
         step_name = f'Открыта страница {self.PAGE_TITLE}'
         self.logger.info(step_name)
         with step(step_name):
+            res = False
             for i in range(0, waiting_time + 1):
                 if self.driver.title == self.PAGE_TITLE:
-                    return True
-                elif i == waiting_time:
-                    return False
+                    res = True
                 else:
                     time.sleep(1)
+            assert res
     
     def is_visible(self, locator_name, time_waiting_element=10, values=None) -> bool:
         step_name = f'Появится {locator_name}'
         self.logger.info(step_name)
         with step(step_name):
             if not values:
-                return self.basic_actions.is_element_visible(self.LOCATORS[locator_name], time_waiting_element)
+                assert self.basic_actions.is_element_visible(self.LOCATORS[locator_name], time_waiting_element)
             else:
                 locator = (By.XPATH, self.XPATH_PATTERNS[locator_name].format(**values))
-                return self.basic_actions.is_element_visible(locator, time_waiting_element)
+                assert self.basic_actions.is_element_visible(locator, time_waiting_element)
     
     def is_not_visible(self, locator_name: object, time_waiting_element: object = 0, values: object = None) -> bool:
         step_name = f'Исчезнет {locator_name}'
         self.logger.info(step_name)
         with step(step_name):
             if not values:
-                return self.basic_actions.wait_element_hiding(self.LOCATORS[locator_name], time_waiting_element)
+                assert self.basic_actions.wait_element_hiding(self.LOCATORS[locator_name], time_waiting_element)
             else:
                 locator = (By.XPATH, self.XPATH_PATTERNS[locator_name].format(**values))
-                return self.basic_actions.wait_element_hiding(locator, time_waiting_element)
+                assert self.basic_actions.wait_element_hiding(locator, time_waiting_element)
 
     def click_at(self, locator_name, time_waiting_element=10, values=None, offset=None):
         step_name = f'Нажать на {locator_name}'
@@ -140,3 +138,17 @@ class BasePage:
         else:
             locator = (By.XPATH, self.XPATH_PATTERNS[locator_name].format(**values))
             return self.basic_actions.wait_element(locator, time_waiting_element)
+
+
+@contextmanager
+def step(step_name):
+    resource = allure_step(step_name)
+    resource.__enter__()
+    try:
+        yield resource
+    except Exception as e:
+        Logger.get_instance().error(f'Ошибка на шаге "{step_name}!"')
+        allure.attach(Driver.get_instance().get_screenshot_as_png(), name='Скриншот', attachment_type=AttachmentType.PNG)
+        raise e
+    finally:
+        resource.__exit__(*sys.exc_info())
